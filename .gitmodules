@@ -1,3 +1,6 @@
 [submodule "mongodb-cluster-docker-compose"]
 	path = mongodb-cluster-docker-compose
 	url = https://github.com/AlexChanson/mongodb-cluster-docker-compose
+[submodule "portainer-volume-helper"]
+	path = portainer-volume-helper
+	url = https://github.com/LEOGLLRD/portainer-volume-helper
