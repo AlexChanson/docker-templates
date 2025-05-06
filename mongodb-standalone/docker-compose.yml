@@ -1,0 +1,43 @@
+## Authors : Mickael Rousseau; Alexandre Chanson
+services:
+  mongodb-{{nom}}:
+    image: mongo:latest
+    container_name: mongodb-{{nom}}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: {{nom}}
+      MONGO_INITDB_ROOT_PASSWORD: {{motdepasse}}
+      MONGO_INITDB_DATABASE: {{nom}}
+    ports:
+      - "0:27017"
+    volumes:
+      - mongodb_data_{{nom}}:/data/db
+      - mongodb_data_import:/docker-entrypoint-initdb.d:ro
+    networks:
+      - mongodb_network_{{nom}}
+
+  mongodb-express-{{nom}}:
+    image: mongo-express
+    container_name: mongodb-express-{{nom}}
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: {{nom}}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: {{motdepasse}}
+      ME_CONFIG_MONGODB_SERVER: mongodb-{{nom}}
+      ME_CONFIG_BASICAUTH_USERNAME: {{nom}}
+      ME_CONFIG_BASICAUTH_PASSWORD: {{motdepasse}}
+      ME_CONFIG_CONNECT_RETRIES: 0
+    ports:
+      - "0:8081"
+    networks:
+      - mongodb_network_{{nom}}
+    depends_on:
+      - mongodb-{{nom}}
+
+networks:
+  mongodb_network_{{nom}}:
+    driver: bridge
+
+volumes:
+  mongodb_data_{{nom}}:
+    driver: local
+  mongodb_data_import:
+    external: true

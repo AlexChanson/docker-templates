@@ -1,0 +1,24 @@
+services:
+  neo4j-{{nom}}:
+    image: neo4j:latest
+    volumes:
+      - neo4j_logs_{{nom}}:/logs
+      - neo4j_config_{{nom}}:/config
+      - neo4j_data_{{nom}}:/data
+      - neo4j_plugins_{{nom}}:/plugins
+    environment:
+      - NEO4J_AUTH=neo4j/{{password}}
+    ports:
+      - "0:7474"
+      - "0:7687"
+    restart: always
+
+volumes:
+  neo4j_data_{{nom}}:
+    driver: local
+  neo4j_logs_{{nom}}:
+    driver: local
+  neo4j_config_{{nom}}:
+    driver: local
+  neo4j_plugins_{{nom}}:
+    driver: local
