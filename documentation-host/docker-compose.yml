@@ -1,0 +1,16 @@
+services:
+  unpack:
+    image: httpd:2.4
+    volumes:
+      - webdocs:/usr/local/apache2/htdocs/
+    command: bash -c "apt update && apt install -y --no-install-recommends wget && wget {{tar-link}} -O archive.tar.gz && tar -xf archive.tar.gz html -C /usr/local/apache2/htdocs/"
+  serve:
+    image: httpd:2.4
+    volumes:
+      - webdocs:/usr/local/apache2/htdocs/
+    ports:
+      - "0:80"
+    restart: always
+
+volumes:
+  webdocs:
