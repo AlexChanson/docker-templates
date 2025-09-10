@@ -22,6 +22,10 @@ services:
       PGADMIN_DEFAULT_PASSWORD: {{ PASSWORD }}
     volumes:
       - pgadmin-data-{{ USERNAME }}:/var/lib/pgadmin
+    configs:
+      - source: pgadmin-servers
+        target: /pgadmin4/servers.json
+        mode: 0444
     depends_on:
       - {{ USERNAME }}-db
     networks:
@@ -33,3 +37,24 @@ networks:
 volumes:
   local_pgdata-{{ USERNAME }}:
   pgadmin-data-{{ USERNAME }}:
+
+configs:
+  pgadmin-servers:
+    content: |
+      {
+        "Servers": {
+          "1": {
+            "Name": "Local {{ USERNAME }}-db",
+            "Group": "Servers",
+            "Host": "{{ USERNAME }}-db",
+            "Port": 5432,
+            "MaintenanceDB": "postgres",
+            "Username": "{{ USERNAME }}",
+            "ConnectionParameters": {
+              "sslmode": "prefer",
+              "connect_timeout": 10,
+              "passfile": "/var/lib/pgadmin/pgpass"
+            }
+          }
+        }
+      }
