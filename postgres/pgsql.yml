@@ -1,0 +1,35 @@
+services:
+  {{ USERNAME }}-db:
+    image: postgres:17.2
+    container_name: {{ USERNAME }}-db
+    restart: always
+    environment:
+      POSTGRES_USER: {{ USERNAME }}
+      POSTGRES_PASSWORD: {{ PASSWORD }}
+    volumes:
+      - local_pgdata-{{ USERNAME }}:/var/lib/postgresql/data
+    networks:
+      - internal_network_{{ USERNAME }}
+
+  {{ USERNAME }}-pgadmin:
+    image: dpage/pgadmin4:8.14.0
+    container_name: {{ USERNAME }}-pgadmin
+    restart: always
+    ports:
+      - "0:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: {{ USERNAME }}@univ-tours.fr
+      PGADMIN_DEFAULT_PASSWORD: {{ PASSWORD }}
+    volumes:
+      - pgadmin-data-{{ USERNAME }}:/var/lib/pgadmin
+    depends_on:
+      - {{ USERNAME }}-db
+    networks:
+      - internal_network_{{ USERNAME }}
+
+networks:
+  internal_network_{{ USERNAME }}:
+
+volumes:
+  local_pgdata-{{ USERNAME }}:
+  pgadmin-data-{{ USERNAME }}:
